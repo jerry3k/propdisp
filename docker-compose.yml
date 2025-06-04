@@ -20,8 +20,13 @@ services:
       - ./propdisp_wp/wp-content:/var/www/html/wp-content
     depends_on:
       - db
+    labels:
+      - traefik.http.routers.propdisp.rule=Host(`propertydisplayed.co.uk`)
+      - traefik.http.routers.propdisp.entrypoints=https
+      - traefik.http.routers.propdisp.tls=true
+      - traefik.http.routers.propdisp.tls.certresolver=letsencrypt
     networks:
-      - propdisp_network
+      - web
 
   db:
     image: mysql:5.7
@@ -38,11 +43,12 @@ services:
       - db_data:/var/lib/mysql
       - ./db740303479_200311.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - propdisp_network
+      - web
 
-networks:
-  propdisp_network:
-    driver: bridge
 
 volumes:
   db_data:
+
+networks:
+    web:
+      external: true
