@@ -5,7 +5,7 @@
 
 if [ "$#" -ne 2 ]; then
     echo "Usage: $0 old_domain new_domain"
-    echo "Example: $0 propertydisplayed.co.uk test.com"
+    echo "Example: $0 propertydisplayed.co.uk propertydisplayed.co.uk"
     exit 1
 fi
 
@@ -17,8 +17,8 @@ echo "Updating domain from $OLD_DOMAIN to $NEW_DOMAIN..."
 # Update WordPress database URLs
 echo "1. Updating WordPress database URLs..."
 docker exec propdisp_mysql mysql -u root -prootpassword db740303479 -e "
-UPDATE WOViPwUhoptions SET option_value = replace(option_value, 'https://${OLD_DOMAIN}', 'https://${NEW_DOMAIN}') WHERE option_name = 'home' OR option_name = 'siteurl';
-UPDATE WOViPwUhposts SET guid = replace(guid, 'https://${OLD_DOMAIN}', 'https://${NEW_DOMAIN}');
+UPDATE WOViPwUhoptions SET option_value = replace(option_value, 'https://${OLD_DOMAIN}', 'http://${NEW_DOMAIN}') WHERE option_name = 'home' OR option_name = 'siteurl';
+UPDATE WOViPwUhposts SET guid = replace(guid, 'https://${OLD_DOMAIN}', 'http://${NEW_DOMAIN}');
 UPDATE WOViPwUhposts SET post_content = replace(post_content, 'https://${OLD_DOMAIN}', 'https://${NEW_DOMAIN}');
 UPDATE WOViPwUhpostmeta SET meta_value = replace(meta_value, 'https://${OLD_DOMAIN}', 'https://${NEW_DOMAIN}');
 

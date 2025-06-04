@@ -8,22 +8,14 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    openssl \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql zip opcache
 
-# Enable Apache SSL and rewrite modules
-RUN a2enmod ssl rewrite
+# Enable Apache rewrite module (still needed for WordPress permalinks)
+RUN a2enmod rewrite
 
-# Generate self-signed certificate with a generic name
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/ssl/private/ssl-cert-snakeoil.key \
-    -out /etc/ssl/certs/ssl-cert-snakeoil.pem \
-    -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
-
-# Configure Apache for SSL
-RUN sed -i 's/^\(\s*\)CustomLog\(.*\)/\1CustomLog\2\n\1ServerName propertydisplayed.co.uk/g' /etc/apache2/sites-available/000-default.conf \
-    && a2ensite default-ssl
+# Set ServerName to suppress "Could not reliably determine the server's fully qualified domain name" warning
+RUN echo "ServerName propertydisplayed.co.uk" >> /etc/apache2/apache2.conf
 
 # PHP configuration
 RUN { \
@@ -47,9 +39,7 @@ COPY ./propdisp_wp/ /var/www/html/
 # Update database settings
 RUN sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', 'db' );/" /var/www/html/wp-config.php
 
-# Set permissions
 # Set recommended permissions
 RUN find /var/www/html/wp-content/themes -type d -exec chmod 755 {} \; \
     && find /var/www/html/wp-content/themes -type f -exec chmod 644 {} \; \
     && chown -R www-data:www-data /var/www/html
-# RUN chown -R www-data:www-data /var/www/html
