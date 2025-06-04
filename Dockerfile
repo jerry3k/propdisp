@@ -48,4 +48,8 @@ COPY ./propdisp_wp/ /var/www/html/
 RUN sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', 'db' );/" /var/www/html/wp-config.php
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html
+# Set recommended permissions
+RUN find /var/www/html/wp-content/themes -type d -exec chmod 755 {} \; \
+    && find /var/www/html/wp-content/themes -type f -exec chmod 644 {} \; \
+    && chown -R www-data:www-data /var/www/html
+# RUN chown -R www-data:www-data /var/www/html
