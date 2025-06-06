@@ -16,7 +16,7 @@ echo "Updating domain from $OLD_DOMAIN to $NEW_DOMAIN..."
 
 # Update WordPress database URLs
 echo "1. Updating WordPress database URLs..."
-docker exec propdisp_mysql mysql -u root -prootpassword db740303479 -e "
+docker exec propdisp_mysql mysql -u root -p rootpassword db740303479 -e "
 # First, convert any https URLs to http
 UPDATE WOViPwUhoptions SET option_value = replace(option_value, 'https://', 'http://') WHERE option_name = 'home' OR option_name = 'siteurl';
 UPDATE WOViPwUhposts SET guid = replace(guid, 'https://', 'http://');
