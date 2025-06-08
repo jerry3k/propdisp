@@ -38,7 +38,7 @@ WORKDIR /var/www/html
 COPY ./propdisp_wp/ /var/www/html/
 
 # Update database settings
-RUN sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', 'db' );/" /var/www/html/wp-config.php
+RUN sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', 'propdisp_mysql' );/" /var/www/html/wp-config.php
 
 # Add Traefik header handling to wp-config.php
 RUN sed -i "/\/\* That's all, stop editing! Happy blogging. \*\//i if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) \&\& \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {\n    \$_SERVER['HTTPS'] = 'on';\n}\n" /var/www/html/wp-config.php
