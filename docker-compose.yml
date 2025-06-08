@@ -10,7 +10,7 @@ services:
     ports:
       - "80:80"
     environment:
-      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_HOST=propdisp_mysql
       - WORDPRESS_DB_USER=dbo740303479
       - WORDPRESS_DB_PASSWORD=eaGsPUuWiQexlyWUkaYC
       - WORDPRESS_DB_NAME=db740303479
